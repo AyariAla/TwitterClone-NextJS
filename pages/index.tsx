@@ -4,6 +4,9 @@ import Image from 'next/image'
 import Sidebar from '../components/Sidebar'
 import Login from '../components/Login'
 import Feed from '../components/Feed'
+import Modal from '../components/Modal'
+import { useRecoilState } from 'recoil'
+import { modalState } from '../atoms/modalAtom'
 import {
   getProviders,
   getSession,
@@ -13,6 +16,7 @@ import {
 
 const Home: NextPage = ({ trendingResults, followResults, providers }) => {
   const { data: session } = useSession()
+  const [isOpen, setIsOpen] = useRecoilState(modalState)
   //if not user is connected !session you get redirected to login page
   if (!session) return <Login providers={providers} />
   return (
@@ -27,8 +31,7 @@ const Home: NextPage = ({ trendingResults, followResults, providers }) => {
         <Feed />
         {session.user?.name}
         {/* Widgets */}
-
-        {/* Modal */}
+        {isOpen && <Modal />}
       </main>
     </div>
   )

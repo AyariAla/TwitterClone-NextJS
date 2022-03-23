@@ -32,7 +32,7 @@ function Post({ id, post, postPage }) {
   const { data: session } = useSession()
   const [isOpen, setIsOpen] = useRecoilState(modalState)
   const [postId, setPostId] = useRecoilState(postIdState)
-  const [comments, setComment] = useState([])
+  const [comments, setComments] = useState([])
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState([])
   const router = useRouter()
@@ -52,6 +52,18 @@ function Post({ id, post, postPage }) {
         likes.findIndex((like) => like.id === session?.user?.uid) !== -1
       ),
     [likes, session]
+  )
+
+  useEffect(
+    () =>
+      onSnapshot(
+        query(
+          collection(db, 'posts', id, 'comments'),
+          orderBy('timestamp', 'desc')
+        ),
+        (snapshot) => setComments(snapshot.docs)
+      ),
+    [db, id]
   )
 
   const likePost = async () => {
