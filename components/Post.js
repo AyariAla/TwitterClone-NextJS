@@ -142,7 +142,7 @@ function Post({ id, post, postPage }) {
         />
         <div
           className={`flex w-10/12 justify-between text-[#6e767d] ${
-            postPage && mx - auto
+            postPage && 'mx-auto'
           }`}
         >
           <div
@@ -154,7 +154,7 @@ function Post({ id, post, postPage }) {
               setIsOpen(true)
             }}
           >
-            <div className="icon group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10">
+            <div className="icon px-2 group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10">
               <ChatIcon className="h-5 group-hover:text-[#1d9bf0]" />
             </div>
             {comments.length > 0 && (
@@ -173,13 +173,13 @@ function Post({ id, post, postPage }) {
                 router.push('/')
               }}
             >
-              <div className="icon group-hover:bg-red-600/10">
+              <div className="icon px-2 group-hover:bg-red-600/10">
                 <TrashIcon className="h-5 group-hover:text-red-600" />
               </div>
             </div>
           ) : (
-            <div className="group flex items-center space-x-1">
-              <div className="icon group-hover:bg-green-500/10">
+            <div className="group flex items-center space-x-1 ">
+              <div className="icon px-2 group-hover:bg-green-500/10">
                 <SwitchHorizontalIcon className="h-5 group-hover:text-green-500" />
               </div>
             </div>
@@ -192,7 +192,7 @@ function Post({ id, post, postPage }) {
               likePost()
             }}
           >
-            <div className="icon group-hover:bg-pink-600/10">
+            <div className="icon px-2 group-hover:bg-pink-600/10">
               {liked ? (
                 <HeartIconFilled className="h-5 text-pink-600" />
               ) : (
@@ -206,14 +206,15 @@ function Post({ id, post, postPage }) {
                 }`}
               >
                 {likes.length}
+                {comments.length}
               </span>
             )}
           </div>
 
-          <div className="icon group">
+          <div className="icon group px-2">
             <ShareIcon className="h-5 group-hover:text-[#1d9bf0]" />
           </div>
-          <div className="icon group">
+          <div className="icon group px-2">
             <ChartBarIcon className="h-5 group-hover:text-[#1d9bf0]" />
           </div>
         </div>
