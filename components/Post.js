@@ -6,7 +6,7 @@ import {
   orderBy,
   query,
   setDoc,
-} from '@firebase/firestore'
+} from '@firebase/firestore';
 import {
   ChartBarIcon,
   ChatIcon,
@@ -15,44 +15,27 @@ import {
   ShareIcon,
   SwitchHorizontalIcon,
   TrashIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/outline';
 import {
   HeartIcon as HeartIconFilled,
   ChatIcon as ChatIconFilled,
-} from '@heroicons/react/solid'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import Moment from 'react-moment'
-import { useRecoilState } from 'recoil'
-import { modalState, postIdState } from '../atoms/modalAtom'
-import { db } from '../firebase'
+} from '@heroicons/react/solid';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import Moment from 'react-moment';
+import { useRecoilState } from 'recoil';
+import { modalState, postIdState } from '../atoms/modalAtom';
+import { db } from '../firebase';
 
 function Post({ id, post, postPage }) {
-  const { data: session } = useSession()
-  const [isOpen, setIsOpen] = useRecoilState(modalState)
-  const [postId, setPostId] = useRecoilState(postIdState)
-  const [comments, setComments] = useState([])
-  const [liked, setLiked] = useState(false)
-  const [likes, setLikes] = useState([])
-  const router = useRouter()
-
-  useEffect(
-    () =>
-      onSnapshot(collection(db, 'posts', id, 'likes'), (snapshot) => {
-        setLikes(snapshot.docs)
-      }),
-    [db, id]
-  )
-
-  //checking if this like is the user's one, to unlike if it's the same user who liked it
-  useEffect(
-    () =>
-      setLiked(
-        likes.findIndex((like) => like.id === session?.user?.uid) !== -1
-      ),
-    [likes, session]
-  )
+  const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIdState);
+  const [comments, setComments] = useState([]);
+  const [likes, setLikes] = useState([]);
+  const [liked, setLiked] = useState(false);
+  const router = useRouter();
 
   useEffect(
     () =>
@@ -64,101 +47,110 @@ function Post({ id, post, postPage }) {
         (snapshot) => setComments(snapshot.docs)
       ),
     [db, id]
-  )
+  );
+
+  useEffect(
+    () =>
+      onSnapshot(collection(db, 'posts', id, 'likes'), (snapshot) =>
+        setLikes(snapshot.docs)
+      ),
+    [db, id]
+  );
+
+  useEffect(
+    () =>
+      setLiked(
+        likes.findIndex((like) => like.id === session?.user?.uid) !== -1
+      ),
+    [likes]
+  );
 
   const likePost = async () => {
     if (liked) {
-      await deleteDoc(doc(db, 'posts', id, 'likes', session.user.uid))
+      await deleteDoc(doc(db, 'posts', id, 'likes', session.user.uid));
     } else {
-      // set doc go in db into posts collection into post into collection of likes
-      //(created) : store this like inside id of the session.user.uid
       await setDoc(doc(db, 'posts', id, 'likes', session.user.uid), {
         username: session.user.name,
-      })
+      });
     }
-  }
+  };
 
   return (
     <div
-      className="flex cursor-pointer border-b border-gray-700 p-3"
+      className='p-3 flex cursor-pointer border-b border-gray-700'
       onClick={() => router.push(`/${id}`)}
     >
       {!postPage && (
         <img
           src={post?.userImg}
-          alt=""
-          className="mr-4 h-11 w-11 rounded-full"
+          alt=''
+          className='h-11 w-11 rounded-full mr-4'
         />
       )}
-      <div className="flex w-full flex-col space-y-2">
+      <div className='flex flex-col space-y-2 w-full'>
         <div className={`flex ${!postPage && 'justify-between'}`}>
           {postPage && (
             <img
               src={post?.userImg}
-              alt="Profile pic"
-              className="mr-4 h-11 w-11 rounded-full"
+              alt='Profile Pic'
+              className='h-11 w-11 rounded-full mr-4'
             />
           )}
-          <div className="text-[#6e767d]">
-            <div className="group inline-block">
+          <div className='text-[#6e767d]'>
+            <div className='inline-block group'>
               <h4
-                className={`text-[15px] font-bold text-[#d9d9d9] group-hover:underline sm:text-base ${
+                className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${
                   !postPage && 'inline-block'
                 }`}
               >
-                {post?.username}{' '}
+                {post?.username}
               </h4>
               <span
                 className={`text-sm sm:text-[15px] ${!postPage && 'ml-1.5'}`}
               >
                 @{post?.tag}
               </span>
-            </div>{' '}
-            .{''}
-            <span className="sm:text[15px] text-sm hover:underline">
-              {' '}
+            </div>
+            ·{' '}
+            <span className='hover:underline text-sm sm:text-[15px]'>
               <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
             </span>
             {!postPage && (
-              <p className="mt-0.5 text-[15px] text-[#d9d9d9] sm:text-base">
+              <p className='text-[#d9d9d9] text-[15px] sm:text-base mt-0.5'>
                 {post?.text}
               </p>
             )}
           </div>
-          <div className="icon group ml-auto flex-shrink-0">
-            <DotsHorizontalIcon className="h-5 text-[#6e767d] group-hover:text-[#1d9bf0]" />
+          <div className='icon group flex-shrink-0 ml-auto'>
+            <DotsHorizontalIcon className='h-5 text-[#6e767d] group-hover:text-[#1d9bf0]' />
           </div>
         </div>
         {postPage && (
-          <p className="mt-0.5 text-[15px] text-[#d9d9d9] sm:text-base">
-            {post?.text}
-          </p>
+          <p className='text-[#d9d9d9] mt-0.5 text-xl'>{post?.text}</p>
         )}
         <img
           src={post?.image}
-          alt=""
-          className="mr-2 max-h-[700px] rounded-2xl object-cover"
-          //   not object-contain because it will messup with the border radius
+          alt=''
+          className='rounded-2xl max-h-[700px] object-cover mr-2'
         />
         <div
-          className={`flex w-10/12 justify-between text-[#6e767d] ${
+          className={`text-[#6e767d] flex justify-between w-10/12 ${
             postPage && 'mx-auto'
           }`}
         >
           <div
-            className="group flex items-center space-x-1"
+            className='flex items-center space-x-1 group'
             onClick={(e) => {
-              // prevents the redirect click on the whole post
-              e.stopPropagation()
-              setPostId(id)
-              setIsOpen(true)
+              e.stopPropagation();
+              setPostId(id);
+              setIsOpen(true);
             }}
           >
-            <div className="icon px-2 group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10">
-              <ChatIcon className="h-5 group-hover:text-[#1d9bf0]" />
+            <div className='icon group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10'>
+              <ChatIcon className='h-5 group-hover:text-[#1d9bf0]' />
             </div>
             {comments.length > 0 && (
-              <span className="text-sm group-hover:text-[#1d9bf0]">
+              <span className='group-hover:text-[#1d9bf0] text-sm'>
                 {comments.length}
               </span>
             )}
@@ -166,61 +158,60 @@ function Post({ id, post, postPage }) {
 
           {session.user.uid === post?.id ? (
             <div
-              className="group flex items-center space-x-1"
+              className='flex items-center space-x-1 group'
               onClick={(e) => {
-                e.stopPropagation()
-                deleteDoc(doc(db, 'posts', id))
-                router.push('/')
+                e.stopPropagation();
+                deleteDoc(doc(db, 'posts', id));
+                router.push('/');
               }}
             >
-              <div className="icon px-2 group-hover:bg-red-600/10">
-                <TrashIcon className="h-5 group-hover:text-red-600" />
+              <div className='icon group-hover:bg-red-600/10'>
+                <TrashIcon className='h-5 group-hover:text-red-600' />
               </div>
             </div>
           ) : (
-            <div className="group flex items-center space-x-1 ">
-              <div className="icon px-2 group-hover:bg-green-500/10">
-                <SwitchHorizontalIcon className="h-5 group-hover:text-green-500" />
+            <div className='flex items-center space-x-1 group'>
+              <div className='icon group-hover:bg-green-500/10'>
+                <SwitchHorizontalIcon className='h-5 group-hover:text-green-500' />
               </div>
             </div>
           )}
 
           <div
-            className="group flex items-center space-x-1"
+            className='flex items-center space-x-1 group'
             onClick={(e) => {
-              e.stopPropagation()
-              likePost()
+              e.stopPropagation();
+              likePost();
             }}
           >
-            <div className="icon px-2 group-hover:bg-pink-600/10">
+            <div className='icon group-hover:bg-pink-600/10'>
               {liked ? (
-                <HeartIconFilled className="h-5 text-pink-600" />
+                <HeartIconFilled className='h-5 text-pink-600' />
               ) : (
-                <HeartIcon className="h-5 group-hover:text-pink-600" />
+                <HeartIcon className='h-5 group-hover:text-pink-600' />
               )}
             </div>
             {likes.length > 0 && (
               <span
-                className={`text-sm group-hover:text-pink-600 ${
+                className={`group-hover:text-pink-600 text-sm ${
                   liked && 'text-pink-600'
                 }`}
               >
                 {likes.length}
-                {comments.length}
               </span>
             )}
           </div>
 
-          <div className="icon group px-2">
-            <ShareIcon className="h-5 group-hover:text-[#1d9bf0]" />
+          <div className='icon group'>
+            <ShareIcon className='h-5 group-hover:text-[#1d9bf0]' />
           </div>
-          <div className="icon group px-2">
-            <ChartBarIcon className="h-5 group-hover:text-[#1d9bf0]" />
+          <div className='icon group'>
+            <ChartBarIcon className='h-5 group-hover:text-[#1d9bf0]' />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Post
+export default Post;
