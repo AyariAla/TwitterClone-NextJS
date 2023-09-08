@@ -83,6 +83,9 @@ function Post({ id, post, postPage }) {
       {!postPage && (
         <img
           src={post?.userImg}
+          // src={
+          //   'https://openseauserdata.com/files/aabc89aee6e21ea107f77c783c96e011.gif'
+          // }
           alt=''
           className='h-11 w-11 rounded-full mr-4'
         />
@@ -92,6 +95,9 @@ function Post({ id, post, postPage }) {
           {postPage && (
             <img
               src={post?.userImg}
+              // src={
+              //   'https://openseauserdata.com/files/aabc89aee6e21ea107f77c783c96e011.gif'
+              // }
               alt='Profile Pic'
               className='h-11 w-11 rounded-full mr-4'
             />
