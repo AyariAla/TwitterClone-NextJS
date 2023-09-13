@@ -26,6 +26,7 @@ const storage = getStorage();
 setLogLevel('debug');
 console.log('##################################');
 console.log('Logging from firebase configuration');
+console.log('Logging PROCESS.ENV', process.env);
 console.log('apiKey :', process.env.API_KEY);
 console.log('projectId :', process.env.PROJECT_ID);
 console.log('authDomain :', process.env.AUTH_DOMAIN);
