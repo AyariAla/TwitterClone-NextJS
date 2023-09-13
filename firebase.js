@@ -24,5 +24,11 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore();
 const storage = getStorage();
 setLogLevel('debug');
+console.log('##################################');
+console.log('Logging from firebase configuration');
+console.log('apiKey :', process.env.API_KEY);
+console.log('projectId :', process.env.PROJECT_ID);
+console.log('authDomain :', process.env.AUTH_DOMAIN);
+
 export default app;
 export { db, storage };
