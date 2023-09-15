@@ -6,8 +6,8 @@ Check out the app deployment on [Vercel](https://twitter-clone-next-js-alpha.ver
 
 > Implementation
 
-![LANDING PAGE](./README_img/twitterLanding.PNG)
+![LANDING PAGE](./READ_ME_SRC/twitterLanding.PNG)
 
-![FEED PAGE](./README_img/twitterFeed.PNG)
+![FEED PAGE](./READ_ME_SRC/twitterFeed.PNG)
 
-![POST PAGE](./README_img/twitterPost.PNG)
+![POST PAGE](./READ_ME_SRC/twitterPost.PNG)
